@@ -1,0 +1,108 @@
+/* Layout Components */
+
+/* Main Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+/* Header Section */
+.header {
+    background: linear-gradient(135deg, #f9fafb, #e2e8f0);
+    padding: 36px 32px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+}
+
+.header h1::before {
+    content: "📈";
+    margin-right: 8px;
+}
+
+.header p {
+    margin-top: 8px;
+    color: var(--text-muted);
+}
+
+.target-notice {
+    margin-top: 16px;
+    padding: 12px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+/* Stats Grid */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    padding: 24px;
+}
+
+/* Controls Section */
+.controls {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.control-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Data Table Section */
+.data-table {
+    padding: 0 24px 24px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+/* Reminders Section */
+.reminders {
+    margin: 0 24px 24px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.reminders h3 {
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-size: 1.125rem;
+}
+
+/* No data state */
+.no-data {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}

@@ -1,0 +1,39 @@
+# Qube-Inventory Delivery Tracker - Git Ignore File
+
+# Include only web application files
+# Ignore everything by default
+*
+
+# Then explicitly include what we want
+!.gitignore
+!README.md
+!index.html
+!css/
+!css/**
+!js/
+!js/**
+!favicon.ico
+
+# Backup files
+*_backup_*
+*.bak
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# Log files
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini

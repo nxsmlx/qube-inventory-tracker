@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qube-Inventory Delivery Aging Tracker</title>
+    <link rel="icon" href="favicon.ico" type="image/png">
+    
+    <!-- CSS Files - Professional Structure -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/reminders.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Qube-Inventory Delivery Aging Tracker</h1>
+            <p>Monitor delivery performance and aging statistics</p>
+            <div class="target-notice">
+                <strong>📋 Target:</strong> All deliveries to be completed within 3 days
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number aging-0" id="count-0">0</div>
+                <div class="stat-label">Same Day</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number aging-1" id="count-1">0</div>
+                <div class="stat-label">1 Day Aging</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number aging-2" id="count-2">0</div>
+                <div class="stat-label">2 Days Aging</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number aging-3" id="count-3">0</div>
+                <div class="stat-label">3 Days Aging</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number aging-4" id="count-4">0</div>
+                <div class="stat-label">> 3 Days Aging</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #f39c12;" id="urgent-count">0</div>
+                <div class="stat-label">Urgent Tickets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-count">0</div>
+                <div class="stat-label">Total Pending</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
+                <button class="btn btn-primary" id="adminBtn">🔒 Admin Upload</button>
+                <button class="btn btn-primary" id="refreshBtn">🔄 Refresh Data</button>
+                <button class="btn btn-secondary" id="testBtn">🔧 Test Database</button>
+            </div>
+            <div class="control-group">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search by Ticket ID or Customer...">
+                <button class="btn btn-secondary active" data-filter="all">All</button>
+                <button class="btn btn-secondary aging-0" data-filter="0">Same Day</button>
+                <button class="btn btn-secondary aging-1" data-filter="1">1 Day</button>
+                <button class="btn btn-secondary aging-2" data-filter="2">2 Days</button>
+                <button class="btn btn-secondary aging-3" data-filter="3">3 Days</button>
+                <button class="btn btn-secondary aging-4" data-filter="4">> 3 Days</button>
+                <button class="btn btn-secondary urgent" data-filter="urgent">Urgent</button>
+            </div>
+        </div>
+
+        <div id="statusMessage"></div>
+
+        <div class="reminders">
+            <h3>📋 Driver Action Items</h3>
+            <div id="reminderContent">
+                <div style="text-align: center; color: #666; padding: 20px;">
+                    Upload your delivery data to see action items
+                </div>
+            </div>
+        </div>
+
+        <div class="data-table">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket Info</th>
+                            <th>Order Received</th>
+                            <th>Urgent?</th>
+                            <th>Aging</th>
+                            <th>Priority</th>
+                            <th>Action Required</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3>Admin Access Required</h3>
+            <p>Enter admin password to upload data:</p>
+            <input type="password" id="adminPassword" placeholder="Enter password...">
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="accessBtn">Access</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Application JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>

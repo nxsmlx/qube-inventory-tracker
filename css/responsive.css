@@ -1,0 +1,219 @@
+/* Responsive Design */
+
+/* Tablet and smaller desktop */
+@media (max-width: 1024px) {
+    .container {
+        margin: 0 16px;
+    }
+    
+    .stats {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        padding: 20px;
+    }
+    
+    .header {
+        padding: 28px 24px;
+    }
+    
+    .header h1 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Mobile landscape and small tablets */
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+    }
+    
+    .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 16px;
+    }
+    
+    .stat-card {
+        padding: 16px;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .header {
+        padding: 20px 16px;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .header p {
+        font-size: 0.875rem;
+    }
+    
+    .target-notice {
+        padding: 10px 16px;
+        font-size: 0.8rem;
+    }
+    
+    .controls {
+        padding: 16px;
+        gap: 12px;
+    }
+    
+    .control-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .btn {
+        padding: 12px 16px;
+        font-size: 0.875rem;
+        justify-content: center;
+    }
+    
+    .search-box {
+        flex: 1;
+        padding: 12px;
+    }
+    
+    .reminders {
+        margin: 0 12px 16px;
+        padding: 16px;
+    }
+    
+    .data-table {
+        padding: 0 12px 16px;
+    }
+    
+    .modal-content {
+        padding: 24px;
+        width: 350px;
+    }
+}
+
+/* Mobile portrait */
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+    
+    .stats {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .header {
+        padding: 16px 12px;
+    }
+    
+    .header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .header h1::before {
+        margin-right: 4px;
+    }
+    
+    .target-notice {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+    }
+    
+    .controls {
+        padding: 12px;
+        gap: 10px;
+    }
+    
+    .btn {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .reminders {
+        margin: 0 8px 12px;
+        padding: 12px;
+    }
+    
+    .reminders h3 {
+        font-size: 1rem;
+    }
+    
+    .data-table {
+        padding: 0 8px 12px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+        width: 320px;
+    }
+    
+    .performance-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .performance-card {
+        padding: 10px;
+    }
+    
+    .performance-number {
+        font-size: 1.25rem;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .header h1::before {
+        font-size: 1.1em;
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white;
+        color: black;
+        padding: 0;
+    }
+    
+    .container {
+        box-shadow: none;
+        border: none;
+    }
+    
+    .controls, .modal {
+        display: none !important;
+    }
+    
+    .header {
+        background: white;
+        border-bottom: 2px solid black;
+    }
+    
+    .reminders {
+        page-break-inside: avoid;
+    }
+    
+    .badge {
+        border: 1px solid black;
+        color: black !important;
+        background: white !important;
+    }
+}

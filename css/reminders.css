@@ -1,0 +1,121 @@
+/* Reminder Section Styles */
+
+.reminder-section {
+    background: var(--surface-2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+}
+
+.reminder-section:nth-child(1) {
+    border-left-color: var(--error);
+}
+
+.reminder-section:nth-child(2) {
+    border-left-color: var(--warning);
+}
+
+.reminder-section:nth-child(3) {
+    border-left-color: var(--accent);
+}
+
+.reminder-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1rem;
+}
+
+.reminder-list {
+    list-style: none;
+}
+
+.reminder-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+}
+
+.reminder-item:last-child {
+    border-bottom: none;
+}
+
+.reminder-item:hover {
+    background: rgba(79, 70, 229, 0.05);
+    border-radius: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+/* Performance Grid */
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.performance-card {
+    background: var(--surface);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.performance-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.performance-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.performance-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Empty state */
+.reminders .empty-state {
+    text-align: center;
+    color: var(--success);
+    padding: 20px;
+    font-weight: 600;
+}
+
+.reminders .empty-state::before {
+    content: "✅";
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .reminder-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .reminder-item .badge {
+        align-self: flex-end;
+    }
+}
