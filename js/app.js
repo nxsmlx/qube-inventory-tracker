@@ -938,11 +938,35 @@ function checkConfiguration() {
 }
 
 // ================================
+// THEME SWITCHER
+// ================================
+function initializeThemeSwitcher() {
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.checked = true;
+    }
+
+    themeToggle.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+}
+
+// ================================
 // INITIALIZATION
 // ================================
 async function initialize() {
     // Initialize event handlers
     initializeEventHandlers();
+    initializeThemeSwitcher();
     
     // Check configuration
     const configIssues = checkConfiguration();

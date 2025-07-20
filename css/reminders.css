@@ -2,31 +2,24 @@
 
 .reminder-section {
     background: var(--surface-2);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    border-left: 5px solid var(--accent);
 }
 
-.reminder-section:nth-child(1) {
-    border-left-color: var(--error);
-}
-
-.reminder-section:nth-child(2) {
-    border-left-color: var(--warning);
-}
-
-.reminder-section:nth-child(3) {
-    border-left-color: var(--accent);
-}
+.reminder-section:nth-of-type(1) { border-left-color: var(--error); }
+.reminder-section:nth-of-type(2) { border-left-color: var(--warning); }
+.reminder-section:nth-of-type(3) { border-left-color: var(--accent); }
 
 .reminder-title {
-    font-weight: 600;
-    margin-bottom: 8px;
+    font-weight: 700;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 1rem;
+    gap: 8px;
+    font-size: 1.1rem;
+    color: var(--text);
 }
 
 .reminder-list {
@@ -37,9 +30,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
+    transition: background 0.2s ease;
 }
 
 .reminder-item:last-child {
@@ -47,42 +40,42 @@
 }
 
 .reminder-item:hover {
-    background: rgba(79, 70, 229, 0.05);
-    border-radius: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 /* Performance Grid */
 .performance-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    margin-top: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
 }
 
 .performance-card {
     background: var(--surface);
-    padding: 12px;
-    border-radius: 8px;
+    padding: 16px;
+    border-radius: var(--radius);
     text-align: center;
     border: 1px solid var(--border);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .performance-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow: var(--shadow);
 }
 
 .performance-number {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 4px;
 }
 
 .performance-label {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -92,15 +85,16 @@
 .reminders .empty-state {
     text-align: center;
     color: var(--success);
-    padding: 20px;
+    padding: 24px;
     font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .reminders .empty-state::before {
     content: "✅";
-    font-size: 2rem;
+    font-size: 2.5rem;
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 /* Responsive adjustments */
