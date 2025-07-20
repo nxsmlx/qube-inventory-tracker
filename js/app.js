@@ -10,22 +10,10 @@ const CONFIG = {
     adminPassword: 'qube2025'
 };
 
-// Sample data (will be replaced by database data)
-let deliveryData = [
-    { ticketId: '60210', orderReceived: '7/11/2025', type: 'Delivery', urgent: 'Yes', customer: 'Segi University', aging: 1 },
-    { ticketId: '60521', orderReceived: '7/14/2025', type: 'Delivery', urgent: 'No', customer: 'Ingram', aging: 5 },
-    { ticketId: '60570', orderReceived: '7/15/2025', type: 'Delivery', urgent: 'No', customer: 'Imazium', aging: 2 },
-    { ticketId: '60572', orderReceived: '7/15/2025', type: 'Collection', urgent: 'No', customer: 'Evoscale', aging: 1 },
-    { ticketId: '60574', orderReceived: '7/15/2025', type: 'Delivery', urgent: 'Yes', customer: 'Ginmaro', aging: 4 },
-    { ticketId: '60584', orderReceived: '7/15/2025', type: 'Collection', urgent: 'No', customer: 'MLINK', aging: 2 },
-    { ticketId: '60585', orderReceived: '7/15/2025', type: 'Collection', urgent: 'No', customer: 'Vstecs', aging: 3 },
-    { ticketId: '60588', orderReceived: '7/15/2025', type: 'Delivery', urgent: 'No', customer: 'MR DIY HQ', aging: 1 },
-    { ticketId: '60591', orderReceived: '7/15/2025', type: 'Collection', urgent: 'Yes', customer: 'PC Image', aging: 6 },
-    { ticketId: '60620', orderReceived: '7/15/2025', type: 'Delivery', urgent: 'No', customer: 'PKT', aging: 2 }
-];
-
+// Global state
+let deliveryData = [];
 let currentFilter = 'all';
-let filteredData = [...deliveryData];
+let filteredData = [];
 
 // ================================
 // SUPABASE CLIENT
@@ -883,7 +871,7 @@ function initializeEventHandlers() {
             document.getElementById('adminPassword').value = '';
             document.getElementById('fileInput').click();
         } else {
-            alert('❌ Incorrect password. Access denied.');
+            showMessage('❌ Incorrect password. Access denied.', 'error');
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminPassword').focus();
         }
@@ -949,55 +937,11 @@ function checkConfiguration() {
 }
 
 // ================================
-// THEME SWITCHER
-// ================================
-function initializeThemeSwitcher() {
-    const themeToggle = document.getElementById('themeToggle');
-
-    // Set initial theme based on saved preference or system setting
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedTheme = localStorage.getItem('theme');
-
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        document.body.classList.add('dark-theme');
-        themeToggle.checked = true;
-    } else {
-        document.body.classList.remove('dark-theme');
-        themeToggle.checked = false;
-    }
-
-    // Handle theme toggle
-    themeToggle.addEventListener('change', function() {
-        if (this.checked) {
-            document.body.classList.add('dark-theme');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.body.classList.remove('dark-theme');
-            localStorage.setItem('theme', 'light');
-        }
-    });
-
-    // Listen for changes in system color scheme
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (e.matches) {
-            document.body.classList.add('dark-theme');
-            themeToggle.checked = true;
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.body.classList.remove('dark-theme');
-            themeToggle.checked = false;
-            localStorage.setItem('theme', 'light');
-        }
-    });
-}
-
-// ================================
 // INITIALIZATION
 // ================================
 async function initialize() {
     // Initialize event handlers
     initializeEventHandlers();
-    initializeThemeSwitcher();
     
     // Check configuration
     const configIssues = checkConfiguration();
@@ -1017,15 +961,8 @@ async function initialize() {
         return;
     }
     
-    // Try to load data from database
-    const loadSuccess = await loadDataFromDatabase();
-    
-    if (!loadSuccess) {
-        // Initialize with sample data
-        updateStats();
-        renderTable(deliveryData);
-        updateReminders();
-    }
+    // Load data from database
+    await loadDataFromDatabase();
 }
 
 // Auto-refresh every 30 seconds
