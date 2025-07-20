@@ -202,62 +202,6 @@ function initializeDatabase() {
 }
 
 // ================================
-// DATABASE TEST FUNCTION
-// ================================
-async function testDatabaseConnection() {
-    try {
-        showMessage('🔧 Testing database connection...', 'info');
-        
-        initializeDatabase();
-        
-        // Test 1: Basic connection
-        console.log('Test 1: Testing basic connection...');
-        const testData = await supabase.query('GET', 'delivery_data?limit=1');
-        console.log('✅ Basic connection works, got:', testData);
-        
-        // Test 2: Insert a test record
-        console.log('Test 2: Testing insert...');
-        const testRecord = {
-            ticket_id: 'TEST123',
-            order_received: '01/01/2025',
-            type: 'Test',
-            urgent: 'No',
-            customer: 'Test Customer',
-            aging: 1,
-            updated_by: 'Test'
-        };
-        
-        const insertResult = await supabase.query('POST', 'delivery_data', [testRecord]);
-        console.log('✅ Insert works, got:', insertResult);
-        
-        // Test 3: Read the data back
-        console.log('Test 3: Testing read...');
-        const readResult = await supabase.query('GET', 'delivery_data?ticket_id=eq.TEST123');
-        console.log('✅ Read works, got:', readResult);
-        
-        // Test 4: Delete the test record
-        console.log('Test 4: Testing delete...');
-        const deleteResult = await supabase.query('DELETE', 'delivery_data?ticket_id=eq.TEST123');
-        console.log('✅ Delete works, got:', deleteResult);
-        
-        showMessage('✅ Database connection test successful! All operations work.', 'success');
-        
-        return true;
-        
-    } catch (error) {
-        console.error('❌ Database test failed:', error);
-        showMessage(`❌ Database test failed: ${error.message}<br><br>
-            <strong>Common issues:</strong><br>
-            • Wrong Supabase URL or API key<br>
-            • Tables don't exist<br>
-            • Row Level Security is enabled<br>
-            • Network connectivity issues`, 'error');
-        
-        return false;
-    }
-}
-
-// ================================
 // UTILITY FUNCTIONS
 // ================================
 function showMessage(message, type = 'info') {
@@ -853,11 +797,6 @@ function initializeEventHandlers() {
         await loadDataFromDatabase();
     });
 
-    // Test database button
-    document.getElementById('testBtn').addEventListener('click', async function() {
-        await testDatabaseConnection();
-    });
-
     // Modal buttons
     document.getElementById('cancelBtn').addEventListener('click', function() {
         document.getElementById('passwordModal').style.display = 'none';
@@ -942,19 +881,39 @@ function checkConfiguration() {
 // ================================
 function initializeThemeSwitcher() {
     const themeToggle = document.getElementById('themeToggle');
-    const currentTheme = localStorage.getItem('theme') || 'light';
 
-    if (currentTheme === 'dark') {
+    // Set initial theme based on saved preference or system setting
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
         document.body.classList.add('dark-theme');
         themeToggle.checked = true;
+    } else {
+        document.body.classList.remove('dark-theme');
+        themeToggle.checked = false;
     }
 
+    // Handle theme toggle
     themeToggle.addEventListener('change', function() {
         if (this.checked) {
             document.body.classList.add('dark-theme');
             localStorage.setItem('theme', 'dark');
         } else {
             document.body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // Listen for changes in system color scheme
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (e.matches) {
+            document.body.classList.add('dark-theme');
+            themeToggle.checked = true;
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-theme');
+            themeToggle.checked = false;
             localStorage.setItem('theme', 'light');
         }
     });
@@ -998,13 +957,7 @@ async function initialize() {
     
     // Show welcome message if everything is working
     if (loadSuccess) {
-        showMessage(`📊 <strong>Qube-Inventory Delivery Tracker</strong><br><br>
-            <strong>👨‍💼 Admin:</strong> Click "🔒 Admin Upload" to upload daily data<br>
-            <strong>👥 Users:</strong> Click "🔄 Refresh Data" to see latest updates<br>
-            <strong>🔧 Test:</strong> Click "🔧 Test Database" to verify connection<br>
-            <strong>🔄 Auto-refresh:</strong> Data updates automatically every 30 seconds<br>
-            <br>
-            💡 <strong>Real-time updates:</strong> All users see the same data instantly!`, 'info');
+        // Welcome message removed as per user request
     }
 }
 

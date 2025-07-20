@@ -2,68 +2,67 @@
 
 /* Main Container */
 .container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
-    background: transparent;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
 /* Header Section */
 .header {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 32px;
+    background: linear-gradient(135deg, #f9fafb, #e2e8f0);
+    padding: 36px 32px;
     text-align: center;
-    margin-bottom: 24px;
-    box-shadow: var(--shadow);
+    border-bottom: 1px solid var(--border);
 }
 
 .header h1 {
-    font-size: 2.25rem;
+    font-size: 2rem;
     font-weight: 700;
-    color: var(--text);
-    background: -webkit-linear-gradient(45deg, var(--accent), var(--accent-hover));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+}
+
+.header h1::before {
+    content: "📈";
+    margin-right: 8px;
 }
 
 .header p {
-    margin-top: 4px;
+    margin-top: 8px;
     color: var(--text-muted);
-    font-size: 1rem;
 }
 
 .target-notice {
-    margin-top: 20px;
-    padding: 10px 16px;
-    background: var(--surface-2);
+    margin-top: 16px;
+    padding: 12px 20px;
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     display: inline-block;
-    color: var(--text-muted);
 }
 
 /* Stats Grid */
 .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-    padding: 0 24px 24px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    padding: 24px;
 }
 
 /* Controls Section */
 .controls {
-    padding: 20px 24px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin: 0 24px 24px;
-    box-shadow: var(--shadow);
+    gap: 16px;
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
 
 .control-group {
@@ -83,7 +82,6 @@
     border-radius: var(--radius);
     background: var(--surface);
     border: 1px solid var(--border);
-    box-shadow: var(--shadow);
 }
 
 /* Reminders Section */
@@ -93,21 +91,18 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
 }
 
 .reminders h3 {
     color: var(--accent);
-    margin-bottom: 20px;
-    font-size: 1.25rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 12px;
+    margin-bottom: 16px;
+    font-size: 1.125rem;
 }
 
 /* No data state */
 .no-data {
-    padding: 60px;
+    padding: 40px;
     text-align: center;
     color: var(--text-muted);
-    font-size: 1rem;
+    font-size: 0.875rem;
 }
