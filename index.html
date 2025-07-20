@@ -22,10 +22,15 @@
         <div class="header">
             <div class="header-top">
                 <h1>Qube-Inventory Delivery Aging Tracker</h1>
-                <div class="theme-switcher">
-                    <label for="themeToggle">☀️</label>
-                    <input type="checkbox" id="themeToggle">
-                    <label for="themeToggle">🌙</label>
+                <div class="header-controls">
+                    <button class="btn btn-icon" id="refreshBtn" title="Refresh Data">🔄</button>
+                    <div class="theme-switcher">
+                        <label for="themeToggle" title="Toggle dark mode">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <button class="btn btn-icon" id="adminBtn" title="Admin Upload">🔒</button>
                 </div>
             </div>
             <p>Monitor delivery performance and aging statistics</p>
@@ -68,8 +73,6 @@
         <div class="controls">
             <div class="control-group">
                 <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
-                <button class="btn btn-primary" id="adminBtn">🔒 Admin Upload</button>
-                <button class="btn btn-primary" id="refreshBtn">🔄 Refresh Data</button>
             </div>
             <div class="control-group">
                 <input type="text" class="search-box" id="searchBox" placeholder="Search by Ticket ID or Customer...">

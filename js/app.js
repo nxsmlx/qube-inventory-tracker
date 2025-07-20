@@ -202,6 +202,62 @@ function initializeDatabase() {
 }
 
 // ================================
+// DATABASE TEST FUNCTION
+// ================================
+async function testDatabaseConnection() {
+    try {
+        showMessage('🔧 Testing database connection...', 'info');
+
+        initializeDatabase();
+
+        // Test 1: Basic connection
+        console.log('Test 1: Testing basic connection...');
+        const testData = await supabase.query('GET', 'delivery_data?limit=1');
+        console.log('✅ Basic connection works, got:', testData);
+
+        // Test 2: Insert a test record
+        console.log('Test 2: Testing insert...');
+        const testRecord = {
+            ticket_id: 'TEST123',
+            order_received: '01/01/2025',
+            type: 'Test',
+            urgent: 'No',
+            customer: 'Test Customer',
+            aging: 1,
+            updated_by: 'Test'
+        };
+
+        const insertResult = await supabase.query('POST', 'delivery_data', [testRecord]);
+        console.log('✅ Insert works, got:', insertResult);
+
+        // Test 3: Read the data back
+        console.log('Test 3: Testing read...');
+        const readResult = await supabase.query('GET', 'delivery_data?ticket_id=eq.TEST123');
+        console.log('✅ Read works, got:', readResult);
+
+        // Test 4: Delete the test record
+        console.log('Test 4: Testing delete...');
+        const deleteResult = await supabase.query('DELETE', 'delivery_data?ticket_id=eq.TEST123');
+        console.log('✅ Delete works, got:', deleteResult);
+
+        showMessage('✅ Database connection test successful! All operations work.', 'success');
+
+        return true;
+
+    } catch (error) {
+        console.error('❌ Database test failed:', error);
+        showMessage(`❌ Database test failed: ${error.message}<br><br>
+            <strong>Common issues:</strong><br>
+            • Wrong Supabase URL or API key<br>
+            • Tables don't exist<br>
+            • Row Level Security is enabled<br>
+            • Network connectivity issues`, 'error');
+
+        return false;
+    }
+}
+
+// ================================
 // UTILITY FUNCTIONS
 // ================================
 function showMessage(message, type = 'info') {
@@ -582,18 +638,24 @@ async function loadDataFromDatabase() {
     }
 }
 
-async function saveDataToDatabase(data) {
+async function uploadData(data) {
     try {
-        showMessage('📤 Saving data to database...', 'info');
+        showMessage('📤 Uploading data to database...', 'info');
         
         initializeDatabase();
         
-        console.log('Saving data to database:', data);
+        console.log('Uploading data to database:', data);
         
-        await supabase.saveDeliveryData(data);
+        const { error } = await supabase
+            .from(CONFIG.supabase.tableName)
+            .upsert(data, { onConflict: 'ticket_id' });
+
+        if (error) {
+            throw error;
+        }
         
-        console.log('Data saved successfully');
-        showMessage('✅ Data saved successfully! All users will see the update.', 'success');
+        console.log('Data uploaded successfully');
+        showMessage('✅ Data uploaded successfully! All users will see the update.', 'success');
         
         // Immediately reload to verify the save worked
         setTimeout(async () => {
@@ -603,8 +665,8 @@ async function saveDataToDatabase(data) {
         return true;
         
     } catch (error) {
-        console.error('Error saving data to database:', error);
-        showMessage(`❌ Failed to save data: ${error.message}`, 'error');
+        console.error('Error uploading data to database:', error);
+        showMessage(`❌ Failed to upload data: ${error.message}`, 'error');
         return false;
     }
 }
@@ -754,26 +816,31 @@ async function processFile(file) {
     
     try {
         const fileName = file.name.toLowerCase();
-        let data;
+        let parsedData;
         
         if (fileName.endsWith('.csv')) {
             const text = await file.text();
-            data = parseCSV(text);
+            parsedData = parseCSV(text);
         } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
             const arrayBuffer = await file.arrayBuffer();
-            data = parseExcel(arrayBuffer);
+            parsedData = parseExcel(arrayBuffer);
         } else {
             throw new Error('Unsupported file format. Please use .xlsx, .xls, or .csv files.');
         }
+
+        const dataToUpload = parsedData.map(item => ({
+            ticket_id: item.ticketId,
+            order_received: item.orderReceived,
+            type: item.type,
+            urgent: item.urgent,
+            customer: item.customer,
+            aging: item.aging
+        }));
         
-        const saved = await saveDataToDatabase(data);
+        const uploaded = await uploadData(dataToUpload);
         
-        if (saved) {
-            deliveryData = data;
-            updateStats();
-            applyFilters();
-            
-            showMessage(`✅ Successfully uploaded ${data.length} records. All users will see the update!`, 'success');
+        if (uploaded) {
+            await loadDataFromDatabase();
         }
         
     } catch (error) {
@@ -795,6 +862,11 @@ function initializeEventHandlers() {
     // Refresh button
     document.getElementById('refreshBtn').addEventListener('click', async function() {
         await loadDataFromDatabase();
+    });
+
+    // Test database button
+    document.getElementById('testBtn').addEventListener('click', async function() {
+        await testDatabaseConnection();
     });
 
     // Modal buttons
@@ -953,11 +1025,6 @@ async function initialize() {
         updateStats();
         renderTable(deliveryData);
         updateReminders();
-    }
-    
-    // Show welcome message if everything is working
-    if (loadSuccess) {
-        // Welcome message removed as per user request
     }
 }
 
