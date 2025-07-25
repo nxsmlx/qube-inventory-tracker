@@ -1,41 +1,34 @@
 /* CSS Custom Properties (Variables) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
+    /* Font */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
     /* Colors - Light Theme */
-    --bg: #f7fafc;
+    --bg: #f8f9fa;
     --surface: #ffffff;
-    --surface-2: #edf2f7;
-    --accent: #4f46e5;
-    --accent-hover: #4338ca;
-    --text: #1e293b;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
-    
+    --surface-2: #f1f3f5;
+    --accent: #1e3c72;
+    --accent-hover: #2a5298;
+    --text: #212529;
+    --text-muted: #6c757d;
+    --border: #dee2e6;
+
     /* Status Colors */
-    --success: #10b981;
-    --warning: #f59e0b;
-    --error: #ef4444;
-    --same-day: #3b82f6;
-    
+    --success: #28a745;
+    --warning: #ffc107;
+    --error: #dc3545;
+    --same-day: #007bff;
+
     /* Layout */
-    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.05);
-    --radius: 12px;
-    
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --radius: 8px;
+
     /* Aging Colors */
     --aging-0: var(--same-day);
     --aging-1: var(--success);
-    --aging-2: var(--warning);
-    --aging-3: var(--error);
-    --aging-4: #8b5cf6;
-}
-
-/* Dark theme support (can be activated with .dark-theme class) */
-.dark-theme {
-    --bg: #0f172a;
-    --surface: #1e293b;
-    --surface-2: #334155;
-    --accent: #6366f1;
-    --accent-hover: #4f46e5;
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --border: #475569;
+    --aging-2: #fd7e14;
+    --aging-3: var(--warning);
+    --aging-4: var(--error);
 }

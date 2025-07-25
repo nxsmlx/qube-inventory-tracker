@@ -10,22 +10,10 @@ const CONFIG = {
     adminPassword: 'qube2025'
 };
 
-// Sample data (will be replaced by database data)
-let deliveryData = [
-    { ticketId: '60210', orderReceived: '7/11/2025', type: 'Delivery', urgent: 'Yes', customer: 'Segi University', aging: 1 },
-    { ticketId: '60521', orderReceived: '7/14/2025', type: 'Delivery', urgent: 'No', customer: 'Ingram', aging: 5 },
-    { ticketId: '60570', orderReceived: '7/15/2025', type: 'Delivery', urgent: 'No', customer: 'Imazium', aging: 2 },
-    { ticketId: '60572', orderReceived: '7/15/2025', type: 'Collection', urgent: 'No', customer: 'Evoscale', aging: 1 },
-    { ticketId: '60574', orderReceived: '7/15/2025', type: 'Delivery', urgent: 'Yes', customer: 'Ginmaro', aging: 4 },
-    { ticketId: '60584', orderReceived: '7/15/2025', type: 'Collection', urgent: 'No', customer: 'MLINK', aging: 2 },
-    { ticketId: '60585', orderReceived: '7/15/2025', type: 'Collection', urgent: 'No', customer: 'Vstecs', aging: 3 },
-    { ticketId: '60588', orderReceived: '7/15/2025', type: 'Delivery', urgent: 'No', customer: 'MR DIY HQ', aging: 1 },
-    { ticketId: '60591', orderReceived: '7/15/2025', type: 'Collection', urgent: 'Yes', customer: 'PC Image', aging: 6 },
-    { ticketId: '60620', orderReceived: '7/15/2025', type: 'Delivery', urgent: 'No', customer: 'PKT', aging: 2 }
-];
-
+// Global state
+let deliveryData = [];
 let currentFilter = 'all';
-let filteredData = [...deliveryData];
+let filteredData = [];
 
 // ================================
 // SUPABASE CLIENT
@@ -207,14 +195,14 @@ function initializeDatabase() {
 async function testDatabaseConnection() {
     try {
         showMessage('🔧 Testing database connection...', 'info');
-        
+
         initializeDatabase();
-        
+
         // Test 1: Basic connection
         console.log('Test 1: Testing basic connection...');
         const testData = await supabase.query('GET', 'delivery_data?limit=1');
         console.log('✅ Basic connection works, got:', testData);
-        
+
         // Test 2: Insert a test record
         console.log('Test 2: Testing insert...');
         const testRecord = {
@@ -226,24 +214,24 @@ async function testDatabaseConnection() {
             aging: 1,
             updated_by: 'Test'
         };
-        
+
         const insertResult = await supabase.query('POST', 'delivery_data', [testRecord]);
         console.log('✅ Insert works, got:', insertResult);
-        
+
         // Test 3: Read the data back
         console.log('Test 3: Testing read...');
         const readResult = await supabase.query('GET', 'delivery_data?ticket_id=eq.TEST123');
         console.log('✅ Read works, got:', readResult);
-        
+
         // Test 4: Delete the test record
         console.log('Test 4: Testing delete...');
         const deleteResult = await supabase.query('DELETE', 'delivery_data?ticket_id=eq.TEST123');
         console.log('✅ Delete works, got:', deleteResult);
-        
+
         showMessage('✅ Database connection test successful! All operations work.', 'success');
-        
+
         return true;
-        
+
     } catch (error) {
         console.error('❌ Database test failed:', error);
         showMessage(`❌ Database test failed: ${error.message}<br><br>
@@ -252,7 +240,7 @@ async function testDatabaseConnection() {
             • Tables don't exist<br>
             • Row Level Security is enabled<br>
             • Network connectivity issues`, 'error');
-        
+
         return false;
     }
 }
@@ -638,18 +626,24 @@ async function loadDataFromDatabase() {
     }
 }
 
-async function saveDataToDatabase(data) {
+async function uploadData(data) {
     try {
-        showMessage('📤 Saving data to database...', 'info');
+        showMessage('📤 Uploading data to database...', 'info');
         
         initializeDatabase();
         
-        console.log('Saving data to database:', data);
+        console.log('Uploading data to database:', data);
         
-        await supabase.saveDeliveryData(data);
+        const { error } = await supabase
+            .from(CONFIG.supabase.tableName)
+            .upsert(data, { onConflict: 'ticket_id' });
+
+        if (error) {
+            throw error;
+        }
         
-        console.log('Data saved successfully');
-        showMessage('✅ Data saved successfully! All users will see the update.', 'success');
+        console.log('Data uploaded successfully');
+        showMessage('✅ Data uploaded successfully! All users will see the update.', 'success');
         
         // Immediately reload to verify the save worked
         setTimeout(async () => {
@@ -659,8 +653,8 @@ async function saveDataToDatabase(data) {
         return true;
         
     } catch (error) {
-        console.error('Error saving data to database:', error);
-        showMessage(`❌ Failed to save data: ${error.message}`, 'error');
+        console.error('Error uploading data to database:', error);
+        showMessage(`❌ Failed to upload data: ${error.message}`, 'error');
         return false;
     }
 }
@@ -810,26 +804,31 @@ async function processFile(file) {
     
     try {
         const fileName = file.name.toLowerCase();
-        let data;
+        let parsedData;
         
         if (fileName.endsWith('.csv')) {
             const text = await file.text();
-            data = parseCSV(text);
+            parsedData = parseCSV(text);
         } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
             const arrayBuffer = await file.arrayBuffer();
-            data = parseExcel(arrayBuffer);
+            parsedData = parseExcel(arrayBuffer);
         } else {
             throw new Error('Unsupported file format. Please use .xlsx, .xls, or .csv files.');
         }
+
+        const dataToUpload = parsedData.map(item => ({
+            ticket_id: item.ticketId,
+            order_received: item.orderReceived,
+            type: item.type,
+            urgent: item.urgent,
+            customer: item.customer,
+            aging: item.aging
+        }));
         
-        const saved = await saveDataToDatabase(data);
+        const uploaded = await uploadData(dataToUpload);
         
-        if (saved) {
-            deliveryData = data;
-            updateStats();
-            applyFilters();
-            
-            showMessage(`✅ Successfully uploaded ${data.length} records. All users will see the update!`, 'success');
+        if (uploaded) {
+            await loadDataFromDatabase();
         }
         
     } catch (error) {
@@ -872,7 +871,7 @@ function initializeEventHandlers() {
             document.getElementById('adminPassword').value = '';
             document.getElementById('fileInput').click();
         } else {
-            alert('❌ Incorrect password. Access denied.');
+            showMessage('❌ Incorrect password. Access denied.', 'error');
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminPassword').focus();
         }
@@ -962,26 +961,8 @@ async function initialize() {
         return;
     }
     
-    // Try to load data from database
-    const loadSuccess = await loadDataFromDatabase();
-    
-    if (!loadSuccess) {
-        // Initialize with sample data
-        updateStats();
-        renderTable(deliveryData);
-        updateReminders();
-    }
-    
-    // Show welcome message if everything is working
-    if (loadSuccess) {
-        showMessage(`📊 <strong>Qube-Inventory Delivery Tracker</strong><br><br>
-            <strong>👨‍💼 Admin:</strong> Click "🔒 Admin Upload" to upload daily data<br>
-            <strong>👥 Users:</strong> Click "🔄 Refresh Data" to see latest updates<br>
-            <strong>🔧 Test:</strong> Click "🔧 Test Database" to verify connection<br>
-            <strong>🔄 Auto-refresh:</strong> Data updates automatically every 30 seconds<br>
-            <br>
-            💡 <strong>Real-time updates:</strong> All users see the same data instantly!`, 'info');
-    }
+    // Load data from database
+    await loadDataFromDatabase();
 }
 
 // Auto-refresh every 30 seconds
